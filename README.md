@@ -1,3 +1,4 @@
+## Port Mapping
 Resource Group -- AWS: No direct equivalent (Strategy: Use AWS Tags for logical grouping of resources)
 
 Virtual Network (VNet) -- AWS: Amazon Virtual Private Cloud (VPC)
