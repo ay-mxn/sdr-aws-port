@@ -44,6 +44,12 @@ variable "ecr_repository_url" {
   type        = string
 }
 
+variable "ecr_image_tag_mutability" {
+  description = "The tag mutability setting for the ECR repository"
+  type        = string
+  default     = "MUTABLE"
+}
+
 variable "container_port" {
   description = "Port exposed by the container"
   type        = number

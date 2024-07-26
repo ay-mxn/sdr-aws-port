@@ -37,3 +37,8 @@ output "cloudwatch_log_group_name" {
   description = "The name of the CloudWatch log group"
   value       = module.cloudwatch.log_group_name
 }
+
+output "ecr_repository_url" {
+  description = "The URL of the ECR repository"
+  value       = module.ecr.repository_url
+}

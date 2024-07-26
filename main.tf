@@ -269,3 +269,11 @@ resource "aws_ecs_service" "app" {
     security_groups = [aws_security_group.main.id]
   }
 }
+
+# ECR
+module "ecr" {
+  source = "./modules/ecr"
+
+  repository_name = "${var.project_name}-${var.environment}"
+  tags            = var.tags
+}
