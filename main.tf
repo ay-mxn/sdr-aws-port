@@ -277,3 +277,11 @@ module "ecr" {
   repository_name = "${var.project_name}-${var.environment}"
   tags            = var.tags
 }
+
+#SQS
+module "sqs" {
+  source = "./modules/sqs"
+
+  queue_name = "${var.project_name}-${var.environment}-queue"
+  tags       = var.tags
+}

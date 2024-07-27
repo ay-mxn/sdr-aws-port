@@ -127,3 +127,15 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "sqs_delay_seconds" {
+  description = "The time in seconds that the delivery of all messages in the queue will be delayed"
+  type        = number
+  default     = 0
+}
+
+variable "sqs_message_retention_seconds" {
+  description = "The number of seconds Amazon SQS retains a message"
+  type        = number
+  default     = 345600  # 4 days
+}
