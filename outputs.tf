@@ -52,3 +52,18 @@ output "sqs_queue_arn" {
   description = "The ARN of the SQS queue"
   value       = module.sqs.queue_arn
 }
+
+output "cognito_user_pool_id" {
+  description = "The ID of the Cognito User Pool"
+  value       = module.cognito.user_pool_id
+}
+
+output "cognito_user_pool_arn" {
+  description = "The ARN of the Cognito User Pool"
+  value       = module.cognito.user_pool_arn
+}
+
+output "cognito_app_client_id" {
+  description = "The ID of the Cognito User Pool Client"
+  value       = module.cognito.client_id
+}

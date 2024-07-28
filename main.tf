@@ -278,10 +278,19 @@ module "ecr" {
   tags            = var.tags
 }
 
-#SQS
+# SQS
 module "sqs" {
   source = "./modules/sqs"
 
   queue_name = "${var.project_name}-${var.environment}-queue"
   tags       = var.tags
+}
+
+# Cognito
+module "cognito" {
+  source = "./modules/cognito"
+
+  user_pool_name = "${var.project_name}-${var.environment}-user-pool"
+  client_name    = "${var.project_name}-${var.environment}-client"
+  tags           = var.tags
 }

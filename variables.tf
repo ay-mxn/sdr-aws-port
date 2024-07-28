@@ -139,3 +139,15 @@ variable "sqs_message_retention_seconds" {
   type        = number
   default     = 345600  # 4 days
 }
+
+variable "cognito_mfa_configuration" {
+  description = "Multi-Factor Authentication (MFA) configuration for the Cognito User Pool"
+  type        = string
+  default     = "OFF"
+}
+
+variable "cognito_password_minimum_length" {
+  description = "Minimum length of the password for Cognito User Pool"
+  type        = number
+  default     = 8
+}
