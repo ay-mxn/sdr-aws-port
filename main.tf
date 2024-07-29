@@ -143,7 +143,7 @@ resource "aws_api_gateway_rest_api" "main" {
 resource "aws_lambda_function" "main" {
   filename      = "lambda_function.zip"
   function_name = "lambda-${var.environment}"
-  role          = aws_iam_role.lambda_role.arn
+  role          = module.iam.lambda_execution_role_arn
   handler       = "index.handler"
   runtime       = "nodejs14.x"
 
@@ -174,6 +174,15 @@ resource "aws_iam_role" "lambda_role" {
       }
     ]
   })
+}
+
+# IAM
+module "iam" {
+  source = "./modules/iam"
+
+  project_name = var.project_name
+  environment  = var.environment
+  tags         = var.tags
 }
 
 # S3 Bucket (for storing artifacts, logs, etc.)
@@ -242,6 +251,7 @@ resource "aws_ecs_task_definition" "app" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
+  execution_role_arn = module.iam.ecs_task_execution_role_arn
 
   container_definitions = jsonencode([
     {
