@@ -151,3 +151,8 @@ variable "cognito_password_minimum_length" {
   type        = number
   default     = 8
 }
+
+variable "alert_email" {
+  description = "Email address to send alerts to"
+  type        = string
+}

@@ -304,3 +304,27 @@ module "cognito" {
   client_name    = "${var.project_name}-${var.environment}-client"
   tags           = var.tags
 }
+
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+
+  log_group_name       = "/aws/sdr/${var.environment}"
+  retention_in_days    = 30
+  kms_key_id           = module.kms.key_id
+  ecs_cluster_name     = module.ecs_cluster.cluster_name
+  ecs_service_name     = module.ecs_service.service_name
+  lambda_function_name = module.lambda.function_name
+  dynamodb_table_name  = module.dynamodb.table_name
+  alarm_actions        = [aws_sns_topic.alerts.arn]
+  tags                 = var.tags
+}
+
+resource "aws_sns_topic" "alerts" {
+  name = "${var.project_name}-${var.environment}-alerts"
+}
+
+resource "aws_sns_topic_subscription" "email" {
+  topic_arn = aws_sns_topic.alerts.arn
+  protocol  = "email"
+  endpoint  = var.alert_email
+}
