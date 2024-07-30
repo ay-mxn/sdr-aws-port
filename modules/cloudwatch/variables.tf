@@ -56,3 +56,29 @@ variable "dashboard_body" {
   type        = string
   default     = null
 }
+
+variable "ecs_cluster_name" {
+  description = "Name of the ECS cluster"
+  type        = string
+}
+
+variable "ecs_service_name" {
+  description = "Name of the ECS service"
+  type        = string
+}
+
+variable "lambda_function_name" {
+  description = "Name of the Lambda function"
+  type        = string
+}
+
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table"
+  type        = string
+}
+
+variable "alarm_actions" {
+  description = "List of ARNs to notify when alarm triggers"
+  type        = list(string)
+  default     = []
+}

@@ -29,3 +29,95 @@ resource "aws_cloudwatch_dashboard" "main" {
   dashboard_name = var.dashboard_name
   dashboard_body = var.dashboard_body
 }
+
+# ECS CPU Utilization Alarm
+resource "aws_cloudwatch_metric_alarm" "ecs_cpu_utilization" {
+  alarm_name          = "${var.log_group_name}-ecs-cpu-utilization"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "80"
+  alarm_description   = "This metric monitors ECS CPU utilization"
+  alarm_actions       = var.alarm_actions
+
+  dimensions = {
+    ClusterName = var.ecs_cluster_name
+    ServiceName = var.ecs_service_name
+  }
+}
+
+# ECS Memory Utilization Alarm
+resource "aws_cloudwatch_metric_alarm" "ecs_memory_utilization" {
+  alarm_name          = "${var.log_group_name}-ecs-memory-utilization"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "MemoryUtilization"
+  namespace           = "AWS/ECS"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "80"
+  alarm_description   = "This metric monitors ECS memory utilization"
+  alarm_actions       = var.alarm_actions
+
+  dimensions = {
+    ClusterName = var.ecs_cluster_name
+    ServiceName = var.ecs_service_name
+  }
+}
+
+# Lambda Error Alarm
+resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
+  alarm_name          = "${var.log_group_name}-lambda-errors"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "This metric monitors Lambda function errors"
+  alarm_actions       = var.alarm_actions
+
+  dimensions = {
+    FunctionName = var.lambda_function_name
+  }
+}
+
+# DynamoDB Read Capacity Alarm
+resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity" {
+  alarm_name          = "${var.log_group_name}-dynamodb-read-capacity"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "ConsumedReadCapacityUnits"
+  namespace           = "AWS/DynamoDB"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = "240"  # Adjust this value based on your DynamoDB table's capacity
+  alarm_description   = "This metric monitors DynamoDB consumed read capacity"
+  alarm_actions       = var.alarm_actions
+
+  dimensions = {
+    TableName = var.dynamodb_table_name
+  }
+}
+
+# DynamoDB Write Capacity Alarm
+resource "aws_cloudwatch_metric_alarm" "dynamodb_write_capacity" {
+  alarm_name          = "${var.log_group_name}-dynamodb-write-capacity"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "ConsumedWriteCapacityUnits"
+  namespace           = "AWS/DynamoDB"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = "240"  # Adjust this value based on your DynamoDB table's capacity
+  alarm_description   = "This metric monitors DynamoDB consumed write capacity"
+  alarm_actions       = var.alarm_actions
+
+  dimensions = {
+    TableName = var.dynamodb_table_name
+  }
+}
