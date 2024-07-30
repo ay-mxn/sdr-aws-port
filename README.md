@@ -53,7 +53,7 @@ This project contains Terraform configurations to deploy the SDR (Study Definiti
 1. Clone this repository:
    ```
    git clone https://github.com/ay-mxn/sdr-aws-port.git
-   cd sdr-aws-infrastructure
+   cd sdr-aws-port
    ```
 
 2. Initialize Terraform:
