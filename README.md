@@ -17,72 +17,101 @@ This project contains Terraform configurations to deploy the SDR (Study Definiti
 │   ├── api_gateway/
 │   ├── dynamodb/
 │   ├── secrets_manager/
-│   └── cloudwatch/
+│   ├── cloudwatch/
+│   ├── ecr/
+│   ├── sqs/
+│   ├── cognito/
+│   └── iam/
 ├── env/
 │   └── dev.tfvars
 └── README.md
 ```
-
-- `main.tf`: The main Terraform configuration file that brings together all the modules.
-- `variables.tf`: Defines all the input variables for the main configuration.
-- `outputs.tf`: Defines the outputs from the main configuration.
-- `modules/`: Contains all the modularized Terraform configurations for different AWS services.
-- `env/`: Contains environment-specific variable files.
-
-## Azure to AWS Service Mapping
-
-This project maps Azure services to their AWS equivalents as follows:
-
-1. Resource Group -> No direct equivalent (uses tags for grouping)
-2. Virtual Network (VNet) -> Amazon VPC
-   - Subnets -> AWS Subnets
-   - Network Security Group -> Security Groups
-3. API Management -> Amazon API Gateway
-4. App Service -> AWS Elastic Container Service (ECS)
-5. Function App -> AWS Lambda
-6. Cosmos DB -> Amazon DynamoDB
-7. Key Vault -> AWS Secrets Manager
-8. Log Analytics Workspace -> Amazon CloudWatch
-9. Application Insights -> AWS X-Ray (not implemented in this version)
-10. Azure Container Registry -> Amazon Elastic Container Registry (ECR) (not implemented in this version)
-11. Service Bus -> Amazon Simple Queue Service (SQS) (not implemented in this version)
-12. Azure AD -> AWS Cognito or IAM (not implemented in this version)
 
 ## Modules Overview
 
 1. `vpc`: Sets up the Virtual Private Cloud, including subnets and security groups.
 2. `ecs_cluster`: Creates an ECS cluster for running containerized applications.
 3. `ecs_service`: Deploys an ECS service and task definition.
-4. `lambda`: Sets up a Lambda function for serverless compute.
+4. `lambda`: Sets up Lambda functions for serverless compute.
 5. `api_gateway`: Creates an API Gateway to manage and secure APIs.
-6. `dynamodb`: Sets up a DynamoDB table for NoSQL database storage.
-7. `secrets_manager`: Creates a Secrets Manager secret for storing sensitive information.
+6. `dynamodb`: Sets up DynamoDB tables for NoSQL database storage.
+7. `secrets_manager`: Creates Secrets Manager secrets for storing sensitive information.
 8. `cloudwatch`: Sets up CloudWatch resources for monitoring and logging.
+9. `ecr`: Creates Elastic Container Registry repositories for storing Docker images.
+10. `sqs`: Sets up Simple Queue Service queues for message processing.
+11. `cognito`: Creates Cognito User Pools and Identity Pools for user authentication.
+12. `iam`: Sets up IAM roles and policies for secure access to AWS resources.
 
-## Usage
+## Prerequisites
 
-1. Ensure you have Terraform installed and AWS CLI configured with appropriate credentials.
+1. AWS CLI installed and configured with appropriate credentials.
+2. Terraform (version 0.14 or later) installed.
+3. An S3 bucket for storing Terraform state (optional, but recommended for team environments).
 
-2. Initialize the Terraform working directory:
+## Deployment Instructions
+
+1. Clone this repository:
+   ```
+   git clone https://github.com/ay-mxn/sdr-aws-port.git
+   cd sdr-aws-infrastructure
+   ```
+
+2. Initialize Terraform:
    ```
    terraform init
    ```
 
-3. Create a `dev.tfvars` file in the `env/` directory with your specific variable values.
+3. Create a `terraform.tfvars` file in the root directory and fill in the required variables. You can use `env/dev.tfvars` as a template.
 
 4. Review the planned changes:
    ```
-   terraform plan -var-file=env/dev.tfvars
+   terraform plan -var-file=terraform.tfvars
    ```
 
 5. Apply the changes:
    ```
-   terraform apply -var-file=env/dev.tfvars
+   terraform apply -var-file=terraform.tfvars
    ```
 
-## Customization
+## Important Considerations
 
-You can customize the deployment by modifying the variables in the `dev.tfvars` file or by adjusting the configurations in the individual module files.
+1. **Cost Management**: Be aware that running this infrastructure in AWS will incur costs. Review the AWS pricing for each service used and set up billing alerts.
+
+2. **Security**: 
+   - Ensure that your AWS credentials are kept secure and not committed to version control.
+   - Review and adjust the IAM roles and policies to adhere to the principle of least privilege.
+   - Enable MFA for all IAM users.
+
+3. **Networking**: 
+   - The VPC module sets up a network architecture. Ensure it aligns with your security requirements.
+   - Consider using VPC endpoints for enhanced security.
+
+4. **Data Privacy**: 
+   - Be mindful of data residency requirements when choosing AWS regions.
+   - Enable encryption at rest for sensitive data in DynamoDB and S3.
+
+5. **Monitoring and Logging**: 
+   - Review the CloudWatch alarms and adjust thresholds as needed.
+   - Set up log retention policies that comply with your data retention requirements.
+
+6. **Scalability**: 
+   - The ECS and Lambda configurations allow for scalability. Monitor usage and adjust capacity as needed.
+
+7. **Disaster Recovery**: 
+   - Consider setting up cross-region replication for critical data.
+   - Implement regular backups and test restore procedures.
+
+8. **Compliance**: 
+   - Ensure your AWS setup complies with relevant regulations (e.g., HIPAA, GDPR).
+   - Use AWS Config and AWS Security Hub for compliance monitoring.
+
+## Cleaning Up
+
+To avoid incurring unnecessary costs, remember to destroy the resources when they're no longer needed:
+
+```
+terraform destroy -var-file=terraform.tfvars
+```
 
 ## Notes
 
